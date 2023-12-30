@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "bug-reporter-app:build:production"
+              "buildTarget": "bug-reporter-app:build:production"
             },
             "development": {
-              "browserTarget": "bug-reporter-app:build:development"
+              "buildTarget": "bug-reporter-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "bug-reporter-app:build"
+            "buildTarget": "bug-reporter-app:build"
           }
         },
         "lint": {
