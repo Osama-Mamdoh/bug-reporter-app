@@ -1,0 +1,34 @@
+<div class="container-fluid bg-light">
+  <div class="row m-4">
+    <p class="h2 mb-4">Dashboard</p>
+    <div class="col-md-3 col-sm-6" *ngFor="let cardData of statisticsData; let i = index">
+      <app-statistics-card [data]="cardData"></app-statistics-card>
+    </div>
+
+    <!-- <div class="row">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-header">
+          Bugs Created
+        </div>
+        <div class="card-body">
+          <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+            [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"
+            (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-header">
+          Bugs by Category
+        </div>
+        <div class="card-body">
+          <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+            [colors]="barChartColors" [legend]="barChartLegend" [chartType]="barChartType"
+            (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  </div>

@@ -1,0 +1,11 @@
+<div class="card text-white mb-3 shadow-lg" [class]="data.background">
+  <div class="card-header">{{data.severity}}</div>
+  <div class="card-body">
+    <h5 class="card-title">Number of Bugs</h5>
+    <p class="card-text fw-bold">{{data.count}}</p>
+  </div>
+  <div class="card-footer d-flex justify-content-between">
+    <span>View Details</span>
+    <fa-icon [icon]="faArrowRight"></fa-icon>
+  </div>
+</div>
