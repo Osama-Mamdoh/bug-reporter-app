@@ -7,11 +7,14 @@
     "build": "ng build --configuration production --vendor-chunk",
     "watch": "ng build --watch --configuration development",
     "test": "jest --coverage",
-    "test-all": "jest --coverage --collectCoverageFrom=\"./src/app/**\"",
+    "test-coverage": "jest --coverage --collectCoverageFrom=\"./src/app/**\"",
     "test:watch": "jest --watch",
     "lint": "ng lint",
     "lint-ts": "eslint \"src/**/*.ts\" --fix",
-    "lint-html": "eslint \"src/**/*.html\""
+    "lint-html": "eslint \"src/**/*.html\"",
+    "compodoc:build": "compodoc -p tsconfig.doc.json",
+    "compodoc:build-and-serve": "compodoc -p tsconfig.doc.json -s",
+    "compodoc:serve": "compodoc -s"
   },
   "private": true,
   "dependencies": {
@@ -50,6 +53,7 @@
     "@angular/cli": "^17.0.8",
     "@angular/compiler-cli": "^17.0.8",
     "@angular/localize": "^17.0.8",
+    "@compodoc/compodoc": "^1.1.23",
     "@typescript-eslint/eslint-plugin": "6.13.1",
     "@typescript-eslint/parser": "6.13.1",
     "eslint": "^8.54.0",
