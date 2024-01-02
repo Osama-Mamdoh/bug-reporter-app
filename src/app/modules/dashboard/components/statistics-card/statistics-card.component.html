@@ -1,10 +1,13 @@
-<div class="card text-white mb-3 shadow-lg" [class]="data.background">
-  <div class="card-header">{{data.severity}}</div>
+<div
+  class="card text-white shadow-lg"
+  [cardBackground]="statisticsCard.severity"
+>
+  <div class="card-header">{{ statisticsCard.severity }}</div>
   <div class="card-body">
     <h5 class="card-title">Number of Bugs</h5>
-    <p class="card-text fw-bold">{{data.count}}</p>
+    <p class="card-text fw-bold">{{ statisticsCard.count }}</p>
   </div>
-  <div class="card-footer d-flex justify-content-between">
+  <div class="card-footer d-flex justify-content-between c-pointer">
     <span>View Details</span>
     <fa-icon [icon]="faArrowRight"></fa-icon>
   </div>

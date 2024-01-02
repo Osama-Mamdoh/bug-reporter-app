@@ -5,9 +5,16 @@ import * as fromPages from './pages';
 import * as fromComponents from './components';
 import { SharedModule } from '@shared/shared.module';
 import { NgChartsModule } from 'ng2-charts';
+import { CardBackgroundDirective } from '@shared/directives';
 
 @NgModule({
   declarations: [...fromPages.pages, ...fromComponents.components],
-  imports: [CommonModule, DashboardRoutingModule, SharedModule, NgChartsModule]
+  imports: [
+    CommonModule,
+    DashboardRoutingModule,
+    SharedModule,
+    NgChartsModule,
+    CardBackgroundDirective,
+  ],
 })
 export class DashboardModule {}

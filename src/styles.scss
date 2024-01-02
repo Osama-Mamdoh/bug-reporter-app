@@ -4,3 +4,10 @@
 @import 'bootstrap/scss/bootstrap';
 /* regular style toast */
 @import 'ngx-toastr/toastr';
+
+/*
+Import Base Files to re-use in components
+*/
+
+@import './assets/scss/base/variables';
+@import './assets/scss/base/mixins';

@@ -1,56 +1,144 @@
-import { Component } from '@angular/core';
-import { BugSeverity } from '@shared/models';
+import { Component, OnInit } from '@angular/core';
+import { Bug, BugSeverity, StatisticsCard } from '@shared/models';
+import { faChartLine } from '@fortawesome/free-solid-svg-icons';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { BugService } from '@core/services';
+import { MONTHS_LABELS } from '@shared/constants';
+import * as helperFunctions from '@shared/helper-functions';
+
 @Component({
   selector: 'app-dashboard-page',
   templateUrl: './dashboard-page.component.html',
-  styleUrl: './dashboard-page.component.scss'
+  styleUrl: './dashboard-page.component.scss',
 })
-export class DashboardPageComponent {
-  statisticsData = [
-    {
-      severity: BugSeverity.BLOCKER,
-      background: 'bg-danger',
-      count: 5
-    },
-    {
-      severity: BugSeverity.CRITICAL,
-      background: 'bg-warning',
-      count: 10
-    },
-    {
-      severity: BugSeverity.MAJOR,
-      background: 'bg-primary',
-      count: 15
-    },
-    {
-      severity: BugSeverity.MEDIUM,
-      background: 'bg-success',
-      count: 20
+export class DashboardPageComponent implements OnInit {
+  faChartLine = faChartLine;
+  bugs: Bug[] = [];
+  statisticsCards: StatisticsCard[] = [];
+  public helpers = helperFunctions;
+  public lineChartData: ChartConfiguration<'line'>['data'];
+  public lineChartOptions: ChartOptions<'line'> = {
+    responsive: true,
+  };
+  public lineChartLegend = true;
+  public barChartData: ChartConfiguration<'bar'>['data'];
+  public barChartLegend = true;
+  public barChartPlugins = [];
+  public barChartOptions: ChartConfiguration<'bar'>['options'] = {
+    responsive: true,
+  };
+
+  constructor(private bugService: BugService) {}
+
+  ngOnInit() {
+    this.bugService.bugs$.subscribe((bugs) => {
+      this.bugs = bugs;
+      this.updateStatisticsCards();
+      this.lineChartData = this.createLineChartData(bugs);
+      this.barChartData = this.createBarChartData(bugs);
+    });
+  }
+
+  updateStatisticsCards() {
+    const countsBySeverity = this.bugs.reduce((counts, bug) => {
+      counts[bug.severity] = (counts[bug.severity] || 0) + 1;
+      return counts;
+    }, {} as { [severity in BugSeverity]: number });
+
+    this.statisticsCards = Object.entries(countsBySeverity)
+      .map(([severity, count]) => ({
+        severity: severity as BugSeverity,
+        count,
+      }))
+      .filter(
+        ({ severity }) =>
+          severity !== BugSeverity.LOW && severity !== BugSeverity.MINOR
+      );
+  }
+
+  /**
+   *
+   * Create the line chart data based on the bugs array.
+   * @param bugs - An array of bug objects.
+   * @returns Line chart data.
+   */
+  createLineChartData(bugs: Bug[]): ChartConfiguration<'line'>['data'] {
+    const labels = MONTHS_LABELS;
+    const datasets = [];
+
+    const bugCountsByMonthAndYear = bugs.reduce((counts, bug) => {
+      const year = bug.createdAt.getFullYear();
+      const monthIndex = bug.createdAt.getMonth();
+      counts[year] = counts[year] || Array(12).fill(0);
+      counts[year][monthIndex] = (counts[year][monthIndex] || 0) + 1;
+      return counts;
+    }, {} as { [year: number]: number[] });
+
+    for (const year in bugCountsByMonthAndYear) {
+      datasets.push({
+        data: bugCountsByMonthAndYear[year],
+        label: year,
+        fill: true,
+      });
     }
-  ];
 
-  // lineChartData: ChartDataSets[] = [
-  //   { data: [10, 20, 30, 40, 50, 60], label: 'Created Bugs' }
-  // ];
-  // lineChartLabels: Label[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-  // lineChartOptions: ChartOptions = {
-  //   responsive: true
-  // };
-  // lineChartLegend = true;
+    return { labels, datasets };
+  }
 
-  // barChartData: ChartDataSets[] = [
-  //   { data: [15, 25, 35, 45, 55, 65], label: 'Critical' },
-  //   { data: [20, 30, 40, 50, 60, 70], label: 'Major' },
-  //   { data: [25, 35, 45, 55, 65, 75], label: 'Medium' }
-  // ];
-  // barChartLabels: Label[] = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  // barChartOptions: ChartOptions = {
-  //   responsive: true
-  // };
-  // barChartLegend = true;
+  /**
+   *
+   * Create the bar chart data based on the bugs array.
+   * @param bugs - An array of bug objects.
+   * @returns Bar chart data.
+   */
+  createBarChartData(bugs: any[]): ChartConfiguration<'bar'>['data'] {
+    const today = new Date();
+    const lastSixMonths = Array.from(
+      { length: 6 },
+      (_, i) => today.getMonth() - i
+    ).map((month) =>
+      new Date(Date.UTC(today.getFullYear(), month, 1)).toLocaleDateString(
+        'en-US',
+        { month: 'short' }
+      )
+    );
+    const bugCountsBySeverityAndMonth = bugs
+      .filter(
+        (bug) =>
+          bug.createdAt >=
+          new Date(Date.UTC(today.getFullYear(), today.getMonth() - 5))
+      )
+      .reduce((counts, bug) => {
+        const monthIndex = lastSixMonths.indexOf(
+          bug.createdAt.toLocaleDateString('en-US', { month: 'short' })
+        );
 
-  createBug() {
-    // Functionality to create a bug
-    console.log('Creating a bug...');
+        if (
+          [
+            BugSeverity.BLOCKER,
+            BugSeverity.CRITICAL,
+            BugSeverity.MAJOR,
+          ].includes(bug.severity)
+        ) {
+          counts[bug.severity] = counts[bug.severity] || Array(6).fill(0);
+
+          if (monthIndex !== -1) {
+            counts[bug.severity][monthIndex] =
+              (counts[bug.severity][monthIndex] || 0) + 1;
+          }
+        }
+
+        return counts;
+      }, {} as { [severity in BugSeverity]: number[] });
+
+    const datasets = [];
+    for (const severity in bugCountsBySeverityAndMonth) {
+      datasets.push({
+        data: bugCountsBySeverityAndMonth[severity],
+        label: severity,
+      });
+    }
+
+    return { labels: lastSixMonths, datasets };
   }
 }

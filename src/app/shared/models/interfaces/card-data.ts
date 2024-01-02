@@ -1,7 +1,6 @@
-import { BugSeverity } from '../enums/bug-severity';
+import { BugSeverity } from '..';
 
 export interface StatisticsCard {
   severity: BugSeverity;
-  background: string;
   count: number;
 }
