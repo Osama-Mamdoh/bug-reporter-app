@@ -7,7 +7,10 @@
     <h5 class="card-title">Number of Bugs</h5>
     <p class="card-text fw-bold">{{ statisticsCard.count }}</p>
   </div>
-  <div class="card-footer d-flex justify-content-between c-pointer">
+  <div
+    class="card-footer d-flex justify-content-between c-pointer"
+    [routerLink]="'/bugs/details'"
+  >
     <span>View Details</span>
     <fa-icon [icon]="faArrowRight"></fa-icon>
   </div>

@@ -1,0 +1,9 @@
+@import 'variables';
+@import 'mixins';
+
+
+@include lg($min) {
+  canvas {
+    max-height: 400px;
+  }
+}

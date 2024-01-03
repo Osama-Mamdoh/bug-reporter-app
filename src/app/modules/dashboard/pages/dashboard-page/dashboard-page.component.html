@@ -1,66 +1,57 @@
-<div class="container-fluid bg-light p-4">
-  <section class="d-flex flex-column">
-    <p class="h2 mb-3">Dashboard</p>
-    <div class="d-flex flex-sm-row flex-column">
-      <div
-        class="col-md-3 col-sm-6 px-3 mb-3"
-        *ngFor="
-          let cardData of statisticsCards;
-          let i = index;
-          trackBy: helpers.trackBy('count')
-        "
+<section class="d-flex flex-column">
+  <p class="h2 mb-3">Dashboard</p>
+  <div class="d-flex flex-sm-row flex-column">
+    @for (cardData of statisticsCards; track helpers.trackBy('count')) {
+    <div class="col-md-3 col-sm-6 px-3 mb-3">
+      <app-statistics-card [statisticsCard]="cardData"></app-statistics-card>
+    </div>
+    }
+  </div>
+</section>
+<br />
+<section class="m-3">
+  <div class="card">
+    <div class="card-header">
+      <fa-icon [icon]="faChartLine"></fa-icon>
+      Yearly Bugs Line Chart
+    </div>
+    <div class="card-body">
+      <canvas
+        baseChart
+        width="100%"
+        [type]="'line'"
+        [data]="lineChartData"
+        [options]="lineChartOptions"
+        [legend]="lineChartLegend"
       >
-        <app-statistics-card [statisticsCard]="cardData"></app-statistics-card>
-      </div>
+      </canvas>
     </div>
-  </section>
-  <br />
-  <section class="m-3">
-    <div class="card">
-      <div class="card-header">
-        <fa-icon [icon]="faChartLine"></fa-icon>
-        Yearly Bugs Line Chart
-      </div>
-      <div class="card-body">
-        <canvas
-          baseChart
-          width="100%"
-          height="30"
-          [type]="'line'"
-          [data]="lineChartData"
-          [options]="lineChartOptions"
-          [legend]="lineChartLegend"
-        >
-        </canvas>
-      </div>
-      <div class="card-footer small text-muted">
-        Distributed bugs across the year per month depend on created date.
-      </div>
+    <div class="card-footer small text-muted">
+      Distributed bugs across the year per month depend on created date.
     </div>
-  </section>
-  <br />
-  <section class="m-3">
-    <div class="card">
-      <div class="card-header">
-        <fa-icon [icon]="faChartLine"></fa-icon>
-        Recent Bugs Bar Chart
-      </div>
-      <div class="card-body">
-        <canvas
-          baseChart
-          width="100%"
-          height="30"
-          [data]="barChartData"
-          [options]="barChartOptions"
-          [plugins]="barChartPlugins"
-          [legend]="barChartLegend"
-          [type]="'bar'"
-        >
-        </canvas>
-      </div>
-      <div class="card-footer small text-muted">
-        Last 6 months bugs count for the blocker, critical, and major bugs.
-      </div>
+  </div>
+</section>
+<br />
+<section class="m-3">
+  <div class="card">
+    <div class="card-header">
+      <fa-icon [icon]="faChartLine"></fa-icon>
+      Recent Bugs Bar Chart
     </div>
-  </section>
-</div>
+    <div class="card-body">
+      <canvas
+        baseChart
+        width="100%"
+        [data]="barChartData"
+        [options]="barChartOptions"
+        [plugins]="barChartPlugins"
+        [legend]="barChartLegend"
+        [type]="'bar'"
+      >
+      </canvas>
+    </div>
+    <div class="card-footer small text-muted">
+      Last 6 months bugs count for the blocker, critical, and major bugs.
+    </div>
+  </div>
+</section>

@@ -1,0 +1,37 @@
+@each $val in $cursors {
+  .c-#{$val} {
+    //c-pointer
+    cursor: $val !important;
+  }
+}
+
+/*
+  Media Query Mixins
+*/
+
+// Small devices
+@mixin sm($minmax) {
+  @if $minmax == $min {
+    @media (min-width: #{$screen-sm-min}) {
+      @content;
+    }
+  } @else {
+    @media (max-width: #{$screen-sm-min -1px}) {
+      @content;
+    }
+  }
+}
+
+// Large devices
+@mixin lg($minmax) {
+  @if $minmax == $min {
+    @media (min-width: #{$screen-lg-min}) {
+      @content;
+    }
+  } @else {
+    @media (max-width: #{$screen-lg-min - 1px}) {
+      @content;
+    }
+  }
+}
+

@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MainWrapperComponent } from './main-wrapper.component';
+import { CreateBugComponent } from './create-bug.component';
 import { TestingModule } from 'src/app/testing/testing.module';
 
-describe('MainWrapperComponent', () => {
-  let component: MainWrapperComponent;
-  let fixture: ComponentFixture<MainWrapperComponent>;
+describe('CreateBugComponent', () => {
+  let component: CreateBugComponent;
+  let fixture: ComponentFixture<CreateBugComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MainWrapperComponent, TestingModule],
+      imports: [TestingModule],
+      declarations: [CreateBugComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MainWrapperComponent);
+    fixture = TestBed.createComponent(CreateBugComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

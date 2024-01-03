@@ -1,6 +1,0 @@
-@each $val in $cursors {
-  .c-#{$val} {
-    //c-pointer
-    cursor: $val !important;
-  }
-}

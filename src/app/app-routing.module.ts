@@ -11,16 +11,23 @@ const routes: Routes = [
         path: 'dashboard',
         loadChildren: () =>
           import('./modules/dashboard/dashboard.module').then(
-            m => m.DashboardModule
-          )
+            (m) => m.DashboardModule
+          ),
       },
-      { path: '**', redirectTo: 'dashboard' }
-    ]
-  }
+      {
+        path: 'bugs',
+        loadChildren: () =>
+          import('./modules/bugs-details/bugs-details.module').then(
+            (m) => m.BugsDetailsModule
+          ),
+      },
+      { path: '**', redirectTo: 'dashboard' },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}
