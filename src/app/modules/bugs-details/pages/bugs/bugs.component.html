@@ -13,8 +13,12 @@
         type="text"
         class="form-control"
         name="searchTerm"
+        [(ngModel)]="tableService.searchTerm"
       />
     </div>
+    @if (tableService.loading$ | async) {
+    <span class="col col-form-label">Loading...</span>
+    }
   </div>
 
   <div class="table-responsive">
@@ -27,7 +31,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (bug of displayedBugs; track bug.id) {
+        @for (bug of displayedBugs$ | async; track bug.id) {
         <tr>
           <th>{{ bug.id }}</th>
           <td>
@@ -56,24 +60,27 @@
             </div>
           </td>
         </tr>
+        } @empty {
+        <tr>
+          <td colspan="7" style="text-align: center">No bugs found</td>
+        </tr>
         }
       </tbody>
     </table>
 
     <div class="d-flex justify-content-between p-2 flex-sm-row flex-column">
       <ngb-pagination
-        [collectionSize]="collectionSize"
-        [(page)]="page"
-        [pageSize]="pageSize"
-        (pageChange)="refreshCountries()"
+        [collectionSize]="(total$ | async)!"
+        [(page)]="tableService.page"
+        [pageSize]="tableService.pageSize"
       >
       </ngb-pagination>
 
       <select
         class="form-select"
         style="width: auto"
-        [(ngModel)]="pageSize"
-        (ngModelChange)="refreshCountries()"
+        name="pageSize"
+        [(ngModel)]="tableService.pageSize"
       >
         <option [ngValue]="10">10 items per page</option>
         <option [ngValue]="20">20 items per page</option>

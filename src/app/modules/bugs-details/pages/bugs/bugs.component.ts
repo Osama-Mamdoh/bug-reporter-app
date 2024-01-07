@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { BugService } from '@core/services';
+import { BugService, TableService } from '@core/services';
 import { Bug } from '@shared/models';
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ModalComponent } from '@shared/components';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TABLE_HEADERS } from '@shared/constants';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-bugs',
@@ -20,23 +21,19 @@ export class BugsComponent {
   faPen = faPen;
   faTrash = faTrash;
   tableHeaders = TABLE_HEADERS;
+  displayedBugs$: Observable<Bug[]>;
+  total$: Observable<number>;
 
-  constructor(private bugService: BugService, private modalService: NgbModal) {}
-
-  refreshCountries() {
-    this.displayedBugs = this.bugs.slice(
-      (this.page - 1) * this.pageSize,
-      (this.page - 1) * this.pageSize + this.pageSize
-    );
+  constructor(
+    private bugService: BugService,
+    private modalService: NgbModal,
+    public tableService: TableService
+  ) {
+    this.displayedBugs$ = tableService.filteredBugs$;
+    this.total$ = tableService.total$;
   }
 
-  ngOnInit() {
-    this.bugService.bugs$.subscribe((bugs) => {
-      this.bugs = bugs;
-      this.collectionSize = this.bugs.length;
-      this.refreshCountries();
-    });
-  }
+  ngOnInit() {}
 
   deleteBug(bug: Bug) {
     const modalRef = this.modalService.open(ModalComponent);
