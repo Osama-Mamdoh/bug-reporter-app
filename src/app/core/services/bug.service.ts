@@ -20,6 +20,8 @@ export class BugService {
    * @param newBug - The bug object to be created.
    */
   createBug(newBug: Bug) {
+    newBug.id =
+      this.bugsSubject$.value[this.bugsSubject$.value.length - 1].id + 1;
     const bugs = [...this.bugsSubject$.value, newBug];
     this.bugsSubject$.next(bugs);
   }

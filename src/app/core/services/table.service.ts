@@ -3,7 +3,6 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { debounceTime, delay, map, switchMap, tap } from 'rxjs/operators';
 import { Bug, SearchResult, State } from '@shared/models';
 import { BugService } from './bug.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -17,10 +16,10 @@ export class TableService {
   private _state: State = {
     page: 1,
     pageSize: 10,
-    searchTerm: '',
+    searchKeyword: '',
   };
 
-  constructor(private bugService: BugService, private route: ActivatedRoute) {
+  constructor(private bugService: BugService) {
     this._search$
       .pipe(
         tap(() => this._loading$.next(true)),
@@ -52,8 +51,8 @@ export class TableService {
   get pageSize() {
     return this._state.pageSize;
   }
-  get searchTerm() {
-    return this._state.searchTerm;
+  get searchKeyword() {
+    return this._state.searchKeyword;
   }
 
   set page(page: number) {
@@ -62,8 +61,8 @@ export class TableService {
   set pageSize(pageSize: number) {
     this._set({ pageSize });
   }
-  set searchTerm(searchTerm: string) {
-    this._set({ searchTerm });
+  set searchKeyword(searchKeyword: string) {
+    this._set({ searchKeyword });
   }
 
   private _set(patch: Partial<State>) {
@@ -72,11 +71,11 @@ export class TableService {
   }
 
   private _search(): Observable<SearchResult> {
-    const { pageSize, page, searchTerm } = this._state;
+    const { pageSize, page, searchKeyword } = this._state;
     return this.bugService.bugs$.pipe(
       map((data) => {
         // Filter
-        let bugs = data.filter((bug) => this._matches(bug, searchTerm));
+        let bugs = data.filter((bug) => this._matches(bug, searchKeyword));
         const total = bugs.length;
 
         // Paginate
@@ -90,13 +89,13 @@ export class TableService {
     );
   }
 
-  private _matches(bug: Bug, term: string) {
+  private _matches(bug: Bug, keyword: string) {
     return (
-      bug.title.toLowerCase().includes(term.toLowerCase()) ||
-      bug.description.toLowerCase().includes(term.toLowerCase()) ||
-      bug.release.toLowerCase().includes(term.toLowerCase()) ||
-      bug.severity.toLowerCase().includes(term.toLowerCase()) ||
-      bug.createdBy.toLowerCase().includes(term.toLowerCase())
+      bug.title.toLowerCase().includes(keyword.toLowerCase()) ||
+      bug.description.toLowerCase().includes(keyword.toLowerCase()) ||
+      bug.release.toLowerCase().includes(keyword.toLowerCase()) ||
+      bug.severity.toLowerCase().includes(keyword.toLowerCase()) ||
+      bug.createdBy.toLowerCase().includes(keyword.toLowerCase())
     );
   }
 }

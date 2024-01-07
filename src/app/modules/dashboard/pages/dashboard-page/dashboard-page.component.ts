@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Bug, BugSeverity, StatisticsCard } from '@shared/models';
 import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BugService } from '@core/services';
 import { MONTHS_LABELS } from '@shared/constants';
 import * as helperFunctions from '@shared/helper-functions';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard-page',
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.scss',
 })
-export class DashboardPageComponent implements OnInit {
+export class DashboardPageComponent implements OnInit, OnDestroy {
   faChartLine = faChartLine;
   bugs: Bug[] = [];
   statisticsCards: StatisticsCard[] = [];
@@ -27,11 +28,12 @@ export class DashboardPageComponent implements OnInit {
   public barChartOptions: ChartConfiguration<'bar'>['options'] = {
     responsive: true,
   };
+  private subscription: Subscription;
 
   constructor(private bugService: BugService) {}
 
   ngOnInit() {
-    this.bugService.bugs$.subscribe((bugs) => {
+    this.subscription = this.bugService.bugs$.subscribe((bugs) => {
       this.bugs = bugs;
       this.updateStatisticsCards();
       this.lineChartData = this.createLineChartData(bugs);
@@ -140,5 +142,9 @@ export class DashboardPageComponent implements OnInit {
     }
 
     return { labels: lastSixMonths, datasets };
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

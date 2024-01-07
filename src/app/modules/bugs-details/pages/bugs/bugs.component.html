@@ -12,8 +12,8 @@
         id="table-complete-search"
         type="text"
         class="form-control"
-        name="searchTerm"
-        [(ngModel)]="tableService.searchTerm"
+        name="searchKeyword"
+        [(ngModel)]="tableService.searchKeyword"
       />
     </div>
     @if (tableService.loading$ | async) {

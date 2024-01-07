@@ -29,7 +29,7 @@ const generateBug = (id: number): Bug => {
     link: `https://bugtracker.com/bug-${id}`,
     description: `Steps to reproduce:\n1. Perform X action.\n2. Observe Y unexpected behavior.`,
     stackTrace: 'Stack trace not yet available.',
-    createdBy: `Tester-${Math.floor(Math.random() * 100)}`,
+    createdBy: `Tester-${Math.floor(Math.random() * 10) + 1}`,
     createdAt: new Date(
       startOf2023.getTime() +
         Math.random() * (today.getTime() - startOf2023.getTime())
