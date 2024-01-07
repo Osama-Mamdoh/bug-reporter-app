@@ -7,12 +7,11 @@ import { BUGS } from '@testing/mocks';
   providedIn: 'root',
 })
 export class BugService {
-  private bugsSubject = new BehaviorSubject<Bug[]>([]);
-  bugs$: Observable<Bug[]> = this.bugsSubject.asObservable();
+  private bugsSubject$ = new BehaviorSubject<Bug[]>([]);
+  bugs$: Observable<Bug[]> = this.bugsSubject$.asObservable();
 
   constructor() {
-    const bugs = BUGS;
-    this.bugsSubject.next(bugs);
+    this.bugsSubject$.next(BUGS);
   }
 
   /**
@@ -21,8 +20,8 @@ export class BugService {
    * @param newBug - The bug object to be created.
    */
   createBug(newBug: Bug) {
-    const bugs = [...this.bugsSubject.value, newBug];
-    this.bugsSubject.next(bugs);
+    const bugs = [...this.bugsSubject$.value, newBug];
+    this.bugsSubject$.next(bugs);
   }
 
   /**
@@ -30,14 +29,14 @@ export class BugService {
    * @param editedBug - The bug object to be edited.
    */
   editBug(editedBug: Bug) {
-    const bugs = this.bugsSubject.value.map((bug) => {
+    const bugs = this.bugsSubject$.value.map((bug) => {
       if (bug.id === editedBug.id) {
         return editedBug;
       } else {
         return bug;
       }
     });
-    this.bugsSubject.next(bugs);
+    this.bugsSubject$.next(bugs);
   }
 
   /**
@@ -45,7 +44,7 @@ export class BugService {
    * @param id - The ID of the bug to be deleted.
    */
   deleteBug(id: number) {
-    const bugs = this.bugsSubject.value.filter((bug) => bug.id !== id);
-    this.bugsSubject.next(bugs);
+    const bugs = this.bugsSubject$.value.filter((bug) => bug.id !== id);
+    this.bugsSubject$.next(bugs);
   }
 }

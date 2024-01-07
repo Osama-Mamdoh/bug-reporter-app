@@ -25,6 +25,10 @@ export class CardBackgroundDirective implements OnInit {
         return 'bg-primary';
       case BugSeverity.MEDIUM:
         return 'bg-success';
+      case BugSeverity.LOW:
+        return 'bg-secondary';
+      case BugSeverity.MINOR:
+        return 'bg-danger-subtle';
       default:
         return '';
     }
