@@ -65,20 +65,28 @@ export class TableService {
     this._set({ searchKeyword });
   }
 
+  /**
+   * Updates the internal state with the provided patch
+   * and triggers a new search.
+   * @param patch The partial state to apply.
+   */
   private _set(patch: Partial<State>) {
     Object.assign(this._state, patch);
     this._search$.next();
   }
 
+  /**
+   * Performs a search based on the current state and returns
+   * an observable of the search results.
+   * @returns An observable of the search results.
+   */
   private _search(): Observable<SearchResult> {
     const { pageSize, page, searchKeyword } = this._state;
     return this.bugService.bugs$.pipe(
       map((data) => {
-        // Filter
         let bugs = data.filter((bug) => this._matches(bug, searchKeyword));
         const total = bugs.length;
 
-        // Paginate
         bugs = bugs.slice(
           (page - 1) * pageSize,
           (page - 1) * pageSize + pageSize
@@ -89,6 +97,12 @@ export class TableService {
     );
   }
 
+  /**
+   * Checks if a bug matches the provided keyword.
+   * @param bug The bug to check.
+   * @param keyword The search keyword.
+   * @returns A boolean indicating if the bug matches the keyword.
+   */
   private _matches(bug: Bug, keyword: string) {
     return (
       bug.title.toLowerCase().includes(keyword.toLowerCase()) ||

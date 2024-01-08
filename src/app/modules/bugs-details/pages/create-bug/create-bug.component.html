@@ -3,138 +3,58 @@
   (ngSubmit)="onSubmit()"
   class="container mt-2 vh-100"
 >
-  <h2 class="text-center mb-4">Report a Bug</h2>
+  <h2 class="text-center mb-4">{{ updatedBug ? "Edit" : "Create" }} Bug</h2>
 
-  <div class="row mb-3">
-    <div class="col-md-6">
+  <div class="row">
+    @for (field of formFields; track field.key) {
+    <div class="col-md-6 mb-3">
       <div class="form-group">
-        <label for="title"> Title </label>
-        <input
-          type="text"
-          formControlName="title"
-          id="title"
-          class="form-control"
-          placeholder="Enter title"
-        />
-        <div
-          *ngIf="
-            bugForm.get('title')?.invalid &&
-            (bugForm.get('title')?.dirty || bugForm.get('title')?.touched)
-          "
-          class="text-danger"
-        >
-          <div *ngIf="bugForm.get('title')?.errors?.['required']">
-            Title is required.
-          </div>
+        <label class="mb-1 text-secondary" for="{{ field.key }}">{{
+          field.label
+        }}</label>
+        <ng-container [ngSwitch]="field.type">
+          <input
+            *ngSwitchCase="inputTypes.TEXT"
+            type="text"
+            formControlName="{{ field.key }}"
+            id="{{ field.key }}"
+            class="form-control"
+            [placeholder]="field.placeholder"
+          />
+          <select
+            *ngSwitchCase="inputTypes.SELECT"
+            formControlName="{{ field.key }}"
+            id="{{ field.key }}"
+            class="form-select"
+          >
+            <option value="" disabled selected>Select your option</option>
+            @for (option of field.options; track $index) {
+            <option [value]="option">
+              {{ option }}
+            </option>
+            }
+          </select>
+          <textarea
+            *ngSwitchCase="inputTypes.TEXT_AREA"
+            formControlName="{{ field.key }}"
+            id="{{ field.key }}"
+            class="form-control"
+            rows="4"
+            [placeholder]="field.placeholder"
+          ></textarea>
+        </ng-container>
+        @if (bugForm.get(field.key)?.invalid && (bugForm.get(field.key)?.dirty
+        || bugForm.get(field.key)?.touched) ) {
+        <div class="text-danger">
+          @if (bugForm.get(field.key)?.errors?.['required']) {
+          {{ field.label }} is required. } @if
+          (bugForm.get(field.key)?.errors?.['pattern']) { Invalid
+          {{ field.label | lowercase }} format. }
         </div>
+        }
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="form-group">
-        <label for="severity">Severity</label>
-        <select formControlName="severity" id="severity" class="form-select">
-          <option value="" disabled selected>Select your option</option>
-          <option *ngFor="let severity of bugSeverity" [value]="severity">
-            {{ severity }}
-          </option>
-        </select>
-        <div
-          *ngIf="
-            bugForm.get('severity')?.invalid &&
-            (bugForm.get('severity')?.dirty || bugForm.get('severity')?.touched)
-          "
-          class="text-danger"
-        >
-          <div *ngIf="bugForm.get('severity')?.errors?.['required']">
-            Severity is required.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <div class="form-group">
-        <label for="release">Release</label>
-        <select formControlName="release" id="release" class="form-select">
-          <option value="" disabled selected>Select your option</option>
-          <option *ngFor="let release of releases" [value]="release">
-            {{ release }}
-          </option>
-        </select>
-        <div
-          *ngIf="
-            bugForm.get('release')?.invalid &&
-            (bugForm.get('release')?.dirty || bugForm.get('release')?.touched)
-          "
-          class="text-danger"
-        >
-          <div *ngIf="bugForm.get('release')?.errors?.['required']">
-            Release is required.
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group">
-        <label for="link">Link</label>
-        <input
-          type="text"
-          formControlName="link"
-          id="link"
-          class="form-control"
-          placeholder="e.g., https://bugtracker.com/bug-1"
-        />
-        <div
-          *ngIf="
-            bugForm.get('link')?.invalid &&
-            (bugForm.get('link')?.dirty || bugForm.get('link')?.touched)
-          "
-          class="text-danger"
-        >
-          Invalid link format.
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <div class="form-group">
-        <label for="description">Description</label>
-
-        <textarea
-          formControlName="description"
-          id="description"
-          class="form-control"
-          rows="5"
-          placeholder="Describe the bug in detail"
-        ></textarea>
-        <div
-          *ngIf="
-            bugForm.get('description')?.invalid &&
-            (bugForm.get('description')?.dirty ||
-              bugForm.get('description')?.touched)
-          "
-          class="text-danger"
-        >
-          <div *ngIf="bugForm.get('description')?.errors?.['required']">
-            Description is required.
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group">
-        <label for="stackTrace">Stack Trace (optional)</label>
-        <textarea
-          formControlName="stackTrace"
-          id="stackTrace"
-          class="form-control"
-          rows="5"
-        ></textarea>
-      </div>
-    </div>
+    }
   </div>
   <div class="form-group text-center">
     <button
@@ -142,7 +62,7 @@
       [disabled]="bugForm.invalid"
       class="btn btn-primary mt-3"
     >
-      Submit Bug Report
+      Submit Bug
     </button>
   </div>
 </form>

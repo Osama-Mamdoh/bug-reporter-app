@@ -1,16 +1,37 @@
-import { Directive, ElementRef, Input, OnInit } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { BugSeverity } from '@shared/models';
 
 @Directive({
   selector: '[cardBackground]',
   standalone: true,
 })
-export class CardBackgroundDirective implements OnInit {
+export class CardBackgroundDirective implements OnChanges {
   @Input('cardBackground') severity: BugSeverity;
 
   constructor(private elementRef: ElementRef) {}
 
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['severity']) {
+      this.updateBackgroundClass();
+    }
+  }
+
+  private updateBackgroundClass() {
+    const backgroundClasses = [
+      'bg-danger',
+      'bg-warning',
+      'bg-primary',
+      'bg-success',
+      'bg-secondary',
+      'bg-danger-subtle',
+    ];
+    this.elementRef.nativeElement.classList.remove(...backgroundClasses);
     const classToAdd = this.getClassBasedOnSeverity(this.severity);
     this.elementRef.nativeElement.classList.add(classToAdd);
   }

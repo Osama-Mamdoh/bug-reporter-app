@@ -27,6 +27,14 @@ export class BugService {
   }
 
   /**
+   * Get a bug from the list of bugs.
+   * @param id - The ID of the bug to be fetched.
+   */
+  getBug(id: number) {
+    return this.bugsSubject$.value.find((bug) => bug.id === id);
+  }
+
+  /**
    * Edits an existing bug in the list of bugs.
    * @param editedBug - The bug object to be edited.
    */

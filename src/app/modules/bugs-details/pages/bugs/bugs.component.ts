@@ -13,16 +13,12 @@ import { Observable } from 'rxjs';
   styleUrl: './bugs.component.scss',
 })
 export class BugsComponent {
-  page = 1;
-  pageSize = 10;
-  collectionSize: number;
-  bugs: Bug[] = [];
-  displayedBugs: Bug[] = [];
   faPen = faPen;
   faTrash = faTrash;
   tableHeaders = TABLE_HEADERS;
   displayedBugs$: Observable<Bug[]>;
   total$: Observable<number>;
+  pageSizes = [10, 20, 30];
 
   constructor(
     private bugService: BugService,
@@ -35,6 +31,10 @@ export class BugsComponent {
 
   ngOnInit() {}
 
+  /**
+   * Deletes a bug by opening a confirmation modal and deleting the bug if confirmed.
+   * @param bug The bug to delete.
+   */
   deleteBug(bug: Bug) {
     const modalRef = this.modalService.open(ModalComponent);
     modalRef.componentInstance.bugTitle = bug.title;
@@ -42,9 +42,7 @@ export class BugsComponent {
       () => {
         this.bugService.deleteBug(bug.id);
       },
-      (error) => {
-        // on error/dismiss
-      }
+      (error) => {}
     );
   }
 }

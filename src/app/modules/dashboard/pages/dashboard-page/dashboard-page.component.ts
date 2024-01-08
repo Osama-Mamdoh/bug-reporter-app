@@ -4,7 +4,6 @@ import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BugService } from '@core/services';
 import { MONTHS_LABELS } from '@shared/constants';
-import * as helperFunctions from '@shared/helper-functions';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -16,7 +15,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   faChartLine = faChartLine;
   bugs: Bug[] = [];
   statisticsCards: StatisticsCard[] = [];
-  public helpers = helperFunctions;
   public lineChartData: ChartConfiguration<'line'>['data'];
   public lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
